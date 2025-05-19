@@ -1,29 +1,67 @@
+using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Text;
-using TMPro;
-public class SawmillUI : MonoBehaviour
+
+public class SawmillUIManager : MonoBehaviour
 {
+    [Header("Data")]
     public LogProcessor processor;
-    public LogData log;
-    public TextMeshProUGUI outputText;
-    public TMP_Dropdown typeDropdown;
-    public Slider fractionSlider;
+    public LogData inputLog;
+    public List<ProductSize> allSizes;
 
-    public void OnProcess()
+    [Header("UI")]
+    public TMP_Dropdown balokDropdown;
+    public TMP_Dropdown papanDropdown;
+    public TMP_Text resultText;
+    public Button processButton;
+
+    [Header("Slider Fraksi Log")]
+    public Slider logFractionSlider;
+
+    private List<ProductSize> balokSizes;
+    private List<ProductSize> papanSizes;
+
+    void Start()
     {
-        ProductType selected = (ProductType)typeDropdown.value;
-        float fraction = fractionSlider.value;
+        // Setup dropdowns
+        balokSizes = allSizes.Where(p => p.type == ProductType.Balok).ToList();
+        papanSizes = allSizes.Where(p => p.type == ProductType.Papan).ToList();
+        SetupDropdown(balokDropdown, balokSizes);
+        SetupDropdown(papanDropdown, papanSizes);
 
-        var result = processor.ProcessLog(log, fraction, selected);
+        // Setup slider
+        logFractionSlider.onValueChanged.AddListener(UpdateFractionLabel);
+        UpdateFractionLabel(logFractionSlider.value);
 
-        StringBuilder sb = new StringBuilder();
-        sb.AppendLine($"Potongan {fraction * 100}% dari Log:");
-        foreach (var product in result)
-        {
-            sb.AppendLine($"- {product.productName} x{product.quantity}");
-        }
+        // Process button
+        processButton.onClick.AddListener(ProcessLog);
+    }
 
-        outputText.text = sb.ToString();
+    void SetupDropdown(TMP_Dropdown dropdown, List<ProductSize> sizeList)
+    {
+        dropdown.ClearOptions();
+        List<string> options = new List<string> { "Tidak Dipilih" };
+        options.AddRange(sizeList.Select(p => $"{p.heightCm}x{p.widthCm} cm"));
+        dropdown.AddOptions(options);
+        dropdown.value = 0;
+    }
+
+    void UpdateFractionLabel(float value)
+    {
+        int percent = Mathf.RoundToInt(value * 100);
+    }
+
+    void ProcessLog()
+    {
+        float fraction = logFractionSlider.value;
+
+        ProductSize selectedBalok = balokDropdown.value > 0 ? balokSizes[balokDropdown.value - 1] : null;
+        ProductSize selectedPapan = papanDropdown.value > 0 ? papanSizes[papanDropdown.value - 1] : null;
+
+        List<WoodProduct> results = processor.ProcessWithDropdown(inputLog, selectedBalok, selectedPapan, fraction);
+
+        resultText.text = string.Join("\n", results.Select(r => $"{r.productName} x{r.quantity}"));
     }
 }

@@ -1,66 +1,167 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class LogProcessor : MonoBehaviour
 {
-    public List<ProductSize> productSizes;
+    [Header("List Semua Ukuran Produk")]
+    public List<ProductSize> productSizeSOs;
 
+    /// <summary>
+    /// Proses log berdasarkan fraksi dan prioritas produk utama (Balok / Papan)
+    /// </summary>
     public List<WoodProduct> ProcessLog(LogData log, float fraction, ProductType mainPreference)
     {
-        float logVolume = CalculateLogVolume(log, fraction);
+        float initialHeight = log.height * fraction;
+        float availableHeight = initialHeight;
+        float logLength = log.length;
+        float logWidth = log.width;
+
         List<WoodProduct> result = new List<WoodProduct>();
 
-        var mainSizes = productSizes
-            .Where(s => s.type == mainPreference)
-            .OrderByDescending(s => GetVolumePerMeter(s));
+        // 1. Prioritas utama
+        var mainList = productSizeSOs
+            .Where(p => p.type == mainPreference && p.widthCm <= logWidth)
+            .OrderByDescending(p => p.heightCm);
 
-        foreach (var size in mainSizes)
+        foreach (var size in mainList)
         {
-            float productVol = GetVolumePerMeter(size);
-            int count = Mathf.FloorToInt(logVolume / productVol);
+            int count = Mathf.FloorToInt(availableHeight / size.heightCm);
             if (count > 0)
             {
                 result.Add(new WoodProduct
                 {
-                    productName = $"{size.type} {size.heightCm}x{size.widthCm} cm",
+                    productName = $"{size.type} {size.heightCm}x{size.widthCm} cm panjang {logLength}m",
                     quantity = count
                 });
-                logVolume -= count * productVol;
+
+                availableHeight -= count * size.heightCm;
             }
         }
 
-        // Convert remaining volume to Usuk and Reng
-        var secondaryTypes = productSizes
-            .Where(s => s.type == ProductType.Usuk || s.type == ProductType.Reng)
-            .OrderByDescending(s => GetVolumePerMeter(s));
+        // 2. Sisa → Usuk dan Reng
+        var secondary = productSizeSOs
+            .Where(p => (p.type == ProductType.Usuk || p.type == ProductType.Reng) && p.widthCm <= logWidth)
+            .OrderByDescending(p => p.heightCm);
 
-        foreach (var size in secondaryTypes)
+        foreach (var size in secondary)
         {
-            float productVol = GetVolumePerMeter(size);
-            int count = Mathf.FloorToInt(logVolume / productVol);
+            int count = Mathf.FloorToInt(availableHeight / size.heightCm);
             if (count > 0)
             {
                 result.Add(new WoodProduct
                 {
-                    productName = $"{size.type} {size.heightCm}x{size.widthCm} cm",
+                    productName = $"{size.type} {size.heightCm}x{size.widthCm} cm panjang {logLength}m",
                     quantity = count
                 });
-                logVolume -= count * productVol;
+
+                availableHeight -= count * size.heightCm;
             }
         }
 
         return result;
     }
 
-    private float CalculateLogVolume(LogData log, float fraction)
+    /// <summary>
+    /// Proses berdasarkan satu atau dua SO target (dari dropdown user)
+    /// </summary>
+    public List<WoodProduct> ProcessWithDropdown(LogData log, ProductSize balok, ProductSize papan, float fraction)
     {
-        float radius = log.diameter / 2f;
-        return Mathf.PI * radius * radius * log.length * fraction; // volume in m�
+        float logLength = log.length;
+        float logWidth = log.width;
+
+        float availableHeightBalok = 0f;
+        float availableHeightPapan = 0f;
+
+        List<WoodProduct> result = new List<WoodProduct>();
+
+        // Alokasi tinggi log
+        float totalUsableHeight = log.height * fraction;
+
+        bool hasBalok = balok != null;
+        bool hasPapan = papan != null;
+
+        if (hasBalok && hasPapan)
+        {
+            availableHeightBalok = totalUsableHeight * 0.6f;
+            availableHeightPapan = totalUsableHeight * 0.4f;
+        }
+        else if (hasBalok)
+        {
+            availableHeightBalok = totalUsableHeight;
+        }
+        else if (hasPapan)
+        {
+            availableHeightPapan = totalUsableHeight;
+        }
+
+        // Proses Balok
+        if (hasBalok && balok.widthCm <= logWidth)
+        {
+            int verticalCount = Mathf.FloorToInt(availableHeightBalok / balok.heightCm);
+            int horizontalCount = Mathf.FloorToInt(logWidth / balok.widthCm);
+            int totalCount = verticalCount * horizontalCount;
+
+            if (totalCount > 0)
+            {
+                result.Add(new WoodProduct
+                {
+                    productName = $"Balok {balok.heightCm}x{balok.widthCm} cm panjang {logLength}m",
+                    quantity = totalCount
+                });
+
+                availableHeightBalok -= verticalCount * balok.heightCm;
+            }
+        }
+
+        // Proses Papan
+        if (hasPapan && papan.widthCm <= logWidth)
+        {
+            int verticalCount = Mathf.FloorToInt(availableHeightPapan / papan.heightCm);
+            int horizontalCount = Mathf.FloorToInt(logWidth / papan.widthCm);
+            int totalCount = verticalCount * horizontalCount;
+
+            if (totalCount > 0)
+            {
+                result.Add(new WoodProduct
+                {
+                    productName = $"Papan {papan.heightCm}x{papan.widthCm} cm panjang {logLength}m",
+                    quantity = totalCount
+                });
+
+                availableHeightPapan -= verticalCount * papan.heightCm;
+            }
+        }
+
+        // Sisa tinggi total bisa digunakan untuk Usuk dan Reng
+        float remainingHeight = availableHeightBalok + availableHeightPapan;
+
+        var secondary = productSizeSOs
+            .Where(p => (p.type == ProductType.Usuk || p.type == ProductType.Reng) && p.widthCm <= logWidth)
+            .OrderByDescending(p => p.heightCm);
+
+        foreach (var size in secondary)
+        {
+            int verticalCount = Mathf.FloorToInt(remainingHeight / size.heightCm);
+            int horizontalCount = Mathf.FloorToInt(logWidth / size.widthCm);
+            int totalCount = verticalCount * horizontalCount;
+
+            if (totalCount > 0)
+            {
+                result.Add(new WoodProduct
+                {
+                    productName = $"{size.type} {size.heightCm}x{size.widthCm} cm panjang {logLength}m",
+                    quantity = totalCount
+                });
+
+                remainingHeight -= verticalCount * size.heightCm;
+            }
+        }
+
+        return result;
     }
 
-    private float GetVolumePerMeter(ProductSize size)
-    {
-        return (size.heightCm / 100f) * (size.widthCm / 100f) * 1f;
-    }
+
+
+
 }
