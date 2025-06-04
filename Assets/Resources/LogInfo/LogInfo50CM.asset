@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2b20c9502f00bf44b87599420fd0479, type: 3}
+  m_Name: LogInfo50CM
+  m_EditorClassIdentifier: 
+  length: 400
+  diameter: 50
+  logPrefabs: {fileID: 332136726691771239, guid: c87bdfa1424728440ae1430f6cee105f, type: 3}

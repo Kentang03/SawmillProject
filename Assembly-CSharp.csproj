@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{964EEE9A-C613-F64B-A2D8-C0B153AB00AC}</ProjectGuid>
+    <ProjectGuid>{8F270635-4504-3679-7A3A-4329F605DC23}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -61,20 +61,28 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2023.2.14f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Script\NewSystem2\LogCuttingJob.cs" />
     <Compile Include="Assets\Script\Sawmill\ConveyorScript.cs" />
     <Compile Include="Assets\Script\Wood\WoodCutterUIHandler.cs" />
     <Compile Include="Assets\Script\NewSystem\FractionSliderSnap.cs" />
     <Compile Include="Assets\Script\NewSystem\SawmillUI.cs" />
+    <Compile Include="Assets\Script\NewSystem2\LogTriggerZone.cs" />
     <Compile Include="Assets\Script\NewSystem\LogProcessor.cs" />
     <Compile Include="Assets\Script\ObjectData\ObjectProperties.cs" />
+    <Compile Include="Assets\Script\NewSystem2\LogInfoHolder.cs" />
+    <Compile Include="Assets\Script\NewSystem2\CuttingResult.cs" />
     <Compile Include="Assets\Script\Wood\WoodCutterManager.cs" />
     <Compile Include="Assets\Script\Wood\WoodTypeSO.cs" />
     <Compile Include="Assets\Script\NewSystem\WoodProduct.cs" />
+    <Compile Include="Assets\Script\NewSystem2\WoodProductType.cs" />
     <Compile Include="Assets\Script\Sawmill\InteractionTrigger.cs" />
     <Compile Include="Assets\Script\NewSystem\LogData.cs" />
+    <Compile Include="Assets\Script\NewSystem2\LogInfo.cs" />
     <Compile Include="Assets\Script\Sawmill\SawmillConverter.cs" />
+    <Compile Include="Assets\Script\NewSystem2\LogCuttingUIController.cs" />
     <Compile Include="Assets\Script\ObjectData\ObjectDataSO.cs" />
     <Compile Include="Assets\Script\NewSystem\ProductSize.cs" />
+    <Compile Include="Assets\Script\NewSystem2\LogCuttingProcessor.cs" />
     <Compile Include="Assets\Script\Wood\CutRequest.cs" />
     <Compile Include="Assets\Script\UI\UIManager.cs" />
   </ItemGroup>
