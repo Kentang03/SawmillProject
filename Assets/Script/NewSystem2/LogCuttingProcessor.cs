@@ -141,7 +141,7 @@ public class LogCuttingProcessor : MonoBehaviour
     {
         if (diameter == 0 || logInfo.logPrefabs == null) return;
 
-        float count = diameter / 50;
+        /*float count = diameter / 50;
         Vector3 spawnPoint;
 
         if (count > 1)
@@ -159,10 +159,10 @@ public class LogCuttingProcessor : MonoBehaviour
                 spawnPosition.position.y,
                 spawnPosition.position.z
             );
-        }
+        }*/
 
-        
-        GameObject spawnedObject = Instantiate(logInfo.logPrefabs, spawnPoint, Quaternion.identity, this.gameObject.transform);
+        Quaternion spawnRotation = Quaternion.Euler(0, 90, 0);
+        GameObject spawnedObject = Instantiate(logInfo.logPrefabs, spawnPosition.position, spawnRotation, this.gameObject.transform);
 
         // Set tipe produk pada log yang di-spawn
         LogInfoHolder holder = spawnedObject.GetComponent<LogInfoHolder>();

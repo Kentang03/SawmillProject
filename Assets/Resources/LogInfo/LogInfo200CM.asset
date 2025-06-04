@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   length: 400
   diameter: 200
-  logPrefabs: {fileID: 4618244692386128404, guid: 43f2c5847d12fe942b9e6a6e4321db4d, type: 3}
+  logPrefabs: {fileID: 7626177680766152356, guid: 022c543d6b943124ea18fe0f157dd31b, type: 3}
