@@ -62,12 +62,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\NewSystem2\LogCuttingJob.cs" />
+    <Compile Include="Assets\Script\NewSystem2\ConveyorNew.cs" />
     <Compile Include="Assets\Script\Sawmill\ConveyorScript.cs" />
     <Compile Include="Assets\Script\Wood\WoodCutterUIHandler.cs" />
     <Compile Include="Assets\Script\NewSystem\FractionSliderSnap.cs" />
     <Compile Include="Assets\Script\NewSystem\SawmillUI.cs" />
     <Compile Include="Assets\Script\NewSystem2\LogTriggerZone.cs" />
     <Compile Include="Assets\Script\NewSystem\LogProcessor.cs" />
+    <Compile Include="Assets\Script\NewSystem2\CameraMovement.cs" />
     <Compile Include="Assets\Script\ObjectData\ObjectProperties.cs" />
     <Compile Include="Assets\Script\NewSystem2\LogInfoHolder.cs" />
     <Compile Include="Assets\Script\NewSystem2\CuttingResult.cs" />

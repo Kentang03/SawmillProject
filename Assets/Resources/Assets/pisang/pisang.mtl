@@ -1,0 +1,14 @@
+# Blender 4.3.2 MTL File: 'None'
+# www.blender.org
+
+newmtl Banana_Plant
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd F:/Blender baru/Textures pohon pisang/Textures/Banana_Plants_BaseColor.png
+map_Ns F:/Blender baru/Textures pohon pisang/Textures/Banana_Plants_Roughness.png
+map_refl F:/Blender baru/Textures pohon pisang/Textures/Banana_Plants_Metallic.png
+map_d F:/Blender baru/Textures pohon pisang/Textures/Banana_Plants_Opacity.png
+map_Bump -bm 1.000000 F:/Blender baru/Textures pohon pisang/Textures/Banana_Plants_Normal_DirectX.png

@@ -12,7 +12,7 @@ public class LogCuttingProcessor : MonoBehaviour
     public GameObject papanPrefab;
     public GameObject usukPrefab;
     public GameObject rengPrefab;
-
+    [SerializeField] private List<Cloth> clothList;
     private int currentSpawnIndex = 0;
 
     private Queue<SpawnRequest> spawnQueue = new Queue<SpawnRequest>();
@@ -53,8 +53,12 @@ public class LogCuttingProcessor : MonoBehaviour
         {
             result.Add(new CuttingResult
             {
-                productName = $"Menghasilkan {type} dengan tinggi {heightCm} cm x lebar {widthCm} cm panjang {logLength} cm sebanyak ",
-                quantity = totalCount
+                productName = $"Menghasilkan {type}:\n" +
+              $"tinggi {heightCm} cm\n" +
+              $"lebar {widthCm} cm\n" +
+              $"panjang {logLength} cm\n" +
+              $"sebanyak ",
+            quantity = totalCount
             });
 
             // Tambahkan ke antrian spawn
@@ -113,7 +117,7 @@ public class LogCuttingProcessor : MonoBehaviour
             currentSpawnIndex = (currentSpawnIndex + 1) % outputSpawnPoints.Count;
             spawned++;
 
-            yield return new WaitForSeconds(0.5f); // jeda antar spawn
+            yield return new WaitForSeconds(1f); // jeda antar spawn
         }
 
         isSpawning = false;
@@ -164,6 +168,12 @@ public class LogCuttingProcessor : MonoBehaviour
         Quaternion spawnRotation = Quaternion.Euler(0, 90, 0);
         GameObject spawnedObject = Instantiate(logInfo.logPrefabs, spawnPosition.position, spawnRotation, this.gameObject.transform);
 
+        CapsuleCollider capsule = spawnedObject.GetComponent<CapsuleCollider>();
+
+        if(capsule != null)
+        {
+            AddClothColliderToAll(capsule);
+        }
         // Set tipe produk pada log yang di-spawn
         LogInfoHolder holder = spawnedObject.GetComponent<LogInfoHolder>();
         if (holder != null)
@@ -178,6 +188,23 @@ public class LogCuttingProcessor : MonoBehaviour
         {
             var request = spawnQueue.Dequeue();
             StartCoroutine(SpawnOutputRoutine(request));
+        }
+    }
+
+    void AddClothColliderToAll(CapsuleCollider newCollider)
+    {
+        foreach (var cloth in clothList)
+        {
+            var currentColliders = cloth.capsuleColliders;
+            var updatedColliders = new CapsuleCollider[currentColliders.Length + 1];
+
+            for (int i = 0; i < currentColliders.Length; i++)
+            {
+                updatedColliders[i] = currentColliders[i];
+            }
+
+            updatedColliders[updatedColliders.Length - 1] = newCollider;
+            cloth.capsuleColliders = updatedColliders;
         }
     }
 }

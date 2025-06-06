@@ -15,6 +15,8 @@ public class LogCuttingUIController : MonoBehaviour
     public List<LogInfo> logs;
     public LogCuttingProcessor processor;
 
+    [SerializeField] private GameObject UICanvas;
+
     private void Start()
     {
         PopulateLogDropdown();
@@ -22,6 +24,19 @@ public class LogCuttingUIController : MonoBehaviour
         startButton.onClick.AddListener(ProcessLog);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            ToogleCanvas();
+        }
+            
+    }
+
+    public void ToogleCanvas()
+    {
+        UICanvas.SetActive(!UICanvas.activeSelf);   
+    }
     void PopulateLogDropdown()
     {
         logDropdown.ClearOptions();
@@ -61,7 +76,7 @@ public class LogCuttingUIController : MonoBehaviour
         }
 
         var results = processor.ProcessSingleType(selectedLog, widthCm, heightCm, type);
-        resultText.text = string.Join("\n", results.ConvertAll(p => $"{p.productName} x{p.quantity}"));
+        resultText.text = string.Join("\n", results.ConvertAll(p => $"{p.productName} {p.quantity}"));
     }
 
 }

@@ -390,6 +390,8 @@
 "Assets/Script/NewSystem/ProductSize.cs"
 "Assets/Script/NewSystem/SawmillUI.cs"
 "Assets/Script/NewSystem/WoodProduct.cs"
+"Assets/Script/NewSystem2/CameraMovement.cs"
+"Assets/Script/NewSystem2/ConveyorNew.cs"
 "Assets/Script/NewSystem2/CuttingResult.cs"
 "Assets/Script/NewSystem2/LogCuttingJob.cs"
 "Assets/Script/NewSystem2/LogCuttingProcessor.cs"
